@@ -1,156 +1,111 @@
-Fraud Detection System – End-to-End Machine Learning Project
+# Fraud Detection System – End-to-End Machine Learning Project
 
-This repository contains an end-to-end fraud detection system designed to simulate how real-world financial fraud detection pipelines work in production environments.
+This project implements an end-to-end fraud detection system that mirrors how real-world financial fraud detection pipelines are built and deployed. It covers the complete Machine Learning lifecycle, from data generation and feature engineering to model training, evaluation, and real-time prediction using a REST API.
 
-The project covers the complete lifecycle of a Machine Learning solution — data generation, feature engineering, model training, evaluation, business cost analysis, and real-time deployment using FastAPI.
+The focus of this project is not just model accuracy, but practical ML engineering, business relevance, and deployability.
 
-This project is built with a strong focus on practical ML engineering, not just model accuracy.
+---
 
-Key Highlights
+## Project Overview
 
-Complete ML pipeline (data → model → API)
+Fraud detection systems must identify fraudulent transactions accurately while minimizing false alerts and operating in real time. This project demonstrates how these challenges can be handled using Machine Learning models combined with a production-style API.
 
-Handles highly imbalanced fraud data
+Key objectives:
+- Handle highly imbalanced fraud data
+- Capture behavioral anomalies instead of relying only on transaction amount
+- Deploy a trained model for real-time inference
 
-Advanced, behavior-based feature engineering
+---
 
-Multiple ML models trained and compared
+## Machine Learning Pipeline
 
-Business-driven evaluation (cost of fraud vs false alarms)
+### Data
+- Synthetic transaction data generated to simulate real payment behavior
+- Includes customer, merchant, device, time, and location information
 
-Production-style REST API for real-time predictions
+### Feature Engineering
+Features are designed based on real-world fraud detection practices:
+- Transaction velocity (last 5 minutes, 1 hour, 24 hours)
+- Distance from previous transaction using Haversine distance
+- Device change detection
+- Customer spending behavior comparison
+- Merchant-level fraud risk
+- Time-based features (hour of day, day of week)
 
-Clean, modular, and readable codebase
+These features help detect unusual behavior patterns commonly associated with fraud.
 
-Problem Statement
+---
 
-Fraud detection systems must:
+## Models Used
 
-Detect fraudulent transactions early
+- XGBoost (final production model)
+- Random Forest
+- Logistic Regression
 
-Minimize false positives (blocking genuine users)
+XGBoost is selected as the final model due to its strong performance on imbalanced datasets and better recall for fraudulent transactions. Class imbalance is handled using appropriate weighting.
 
-Handle extreme class imbalance
+---
 
-Work in real-time with low latency
-
-This project demonstrates how these challenges can be addressed using Machine Learning and modern backend tools.
-
-Machine Learning Approach
-Data
-
-Synthetic transaction data generated to simulate real payment behavior
-
-Includes customer activity, merchant behavior, device usage, location, and time
-
-Feature Engineering
-
-The model uses engineered features inspired by real fraud systems:
-
-Transaction velocity (last 5 minutes, 1 hour, 24 hours)
-
-Distance from previous transaction (Haversine distance)
-
-Device change detection
-
-Customer spending pattern comparison
-
-Merchant fraud history
-
-Time-based features (hour of day, day of week)
-
-These features help capture behavioral anomalies, not just transaction amount.
-
-Models Trained
-
-XGBoost (final production model)
-
-Random Forest
-
-Logistic Regression
-
-XGBoost is selected as the final model due to:
-
-Better performance on imbalanced data
-
-Strong recall for fraud cases
-
-Robust probability estimates
-
-Class imbalance is handled using scale_pos_weight.
-
-Model Evaluation Metrics
+## Model Evaluation
 
 Models are evaluated using:
+- Precision
+- Recall
+- F1-score
+- ROC-AUC
+- PR-AUC
 
-Precision
+A cost-based evaluation is also included to reflect real business impact:
+- False negatives (missed fraud) have a high cost
+- False positives (incorrectly flagged transactions) have a lower cost
 
-Recall
+---
 
-F1-Score
+## Project Structure
 
-ROC-AUC
-
-PR-AUC
-
-In addition, a cost-based evaluation is included to reflect real business impact:
-
-False Negatives (missed fraud) → high cost
-
-False Positives (incorrect blocks) → lower cost
-
-Project Structure
 fraud-detection/
 │
-├── fraud_detection.py        # Training + feature engineering + API
-├── requirements.txt          # Project dependencies
-├── fraud_xgb_model.joblib    # Trained XGBoost model
-├── scaler.joblib             # Feature scaler
-├── ohe.joblib                # One-hot encoder
-├── merchant_freq.joblib      # Merchant frequency mapping
+├── fraud_detection.py # Data generation, training, and API
+├── requirements.txt # Project dependencies
+├── fraud_xgb_model.joblib # Trained XGBoost model
+├── scaler.joblib # Feature scaler
+├── ohe.joblib # One-hot encoder
+├── merchant_freq.joblib # Merchant frequency mapping
 └── README.md
 
-Installation
+yaml
+Copy code
 
-Clone the repository and install dependencies:
+---
 
+## Installation
+
+```bash
 git clone https://github.com/Mahith-data/fraud-detection.git
 cd fraud-detection
 pip install -r requirements.txt
-
-Model Training
-
-Training must be run once before starting the API:
-
+Training the Model
+bash
+Copy code
 python fraud_detection.py --train
-
-
-This step:
-
-Generates synthetic data
-
-Trains all models
-
-Saves trained artifacts for production use
+This step generates data, trains the models, and saves all required artifacts for inference.
 
 Running the API
-
-After training:
-
+bash
+Copy code
 uvicorn fraud_detection:app --reload
+API will be available at:
 
-
-The API will be available at:
-
+cpp
+Copy code
 http://127.0.0.1:8000
+API Usage Example
+Endpoint: POST /score
 
-API Testing (Swagger UI)
+Request:
 
-Open the browser and go to:
-
-http://127.0.0.1:8000/docs
-
-Sample Request
+json
+Copy code
 {
   "transaction_id": "T10001",
   "transaction_amount": 15000,
@@ -161,16 +116,16 @@ Sample Request
   "longitude": 77.23,
   "device_type": "android"
 }
+Response:
 
-Sample Response
+json
+Copy code
 {
   "transaction_id": "T10001",
   "fraud_probability": 0.84,
   "decision": "FLAGGED"
 }
-
-Technical Stack
-
+Tech Stack
 Python
 
 NumPy, Pandas
@@ -185,35 +140,16 @@ Uvicorn
 
 Joblib
 
-Real-World Relevance
+Key Takeaways
+Demonstrates complete ML workflow, not just model training
 
-This project reflects how fraud detection systems are designed in real companies:
+Emphasizes feature engineering and business logic
 
-Feature engineering based on user behavior
+Designed with production deployment in mind
 
-Imbalance-aware model training
-
-Business cost considerations
-
-Real-time scoring via REST APIs
-
-Model artifact management for deployment
-
-Future Enhancements
-
-Integration with real transaction datasets
-
-Dockerization for production deployment
-
-CI/CD pipeline with automated testing
-
-Threshold tuning based on business risk
-
-Model monitoring and data drift detection
+Suitable for real-time fraud detection use cases
 
 Author
-
 Mahith K
 Computer Science (Data Science)
-Interested in Machine Learning, Data Engineering, and Applied AI
-
+Interested in Machine Learning and Data Engineering
