@@ -1,126 +1,219 @@
-# 🕵️‍♂️ Fraud Detection System (with FastAPI)
+Fraud Detection System – End-to-End Machine Learning Project
 
-This project builds an **end-to-end fraud detection system** that generates **synthetic transaction data**, performs **feature engineering**, trains **machine learning models (XGBoost, RandomForest, LogisticRegression)**, and exposes a **real-time fraud scoring API** using **FastAPI**.
+This repository contains an end-to-end fraud detection system designed to simulate how real-world financial fraud detection pipelines work in production environments.
 
----
+The project covers the complete lifecycle of a Machine Learning solution — data generation, feature engineering, model training, evaluation, business cost analysis, and real-time deployment using FastAPI.
 
-## 🚀 Features
+This project is built with a strong focus on practical ML engineering, not just model accuracy.
 
-- ✅ Synthetic transaction dataset generator  
-- ✅ Advanced feature engineering (time-based, behavioral, and risk features)  
-- ✅ Model training with XGBoost, RandomForest, and Logistic Regression  
-- ✅ Automatic scaling, encoding, and model artifact saving  
-- ✅ Business cost analysis (False Positive / False Negative cost)  
-- ✅ Real-time fraud scoring API endpoint (`/score`)  
+Key Highlights
 
----
+Complete ML pipeline (data → model → API)
 
-## 🧠 Tech Stack
+Handles highly imbalanced fraud data
 
-- **Python 3.9+**
-- **FastAPI**
-- **scikit-learn**
-- **XGBoost**
-- **Joblib**
-- **Pandas / NumPy**
+Advanced, behavior-based feature engineering
 
----
+Multiple ML models trained and compared
 
-## 📦 Installation
+Business-driven evaluation (cost of fraud vs false alarms)
 
-```bash
-# 1️⃣ Clone this repository
-git clone https://github.com/your-username/fraud-detection-system.git
-cd fraud-detection-system
+Production-style REST API for real-time predictions
 
-# 2️⃣ Create a virtual environment
-python -m venv venv
-source venv/bin/activate      # (Linux/Mac)
-venv\Scripts\activate         # (Windows)
+Clean, modular, and readable codebase
 
-# 3️⃣ Install dependencies
+Problem Statement
+
+Fraud detection systems must:
+
+Detect fraudulent transactions early
+
+Minimize false positives (blocking genuine users)
+
+Handle extreme class imbalance
+
+Work in real-time with low latency
+
+This project demonstrates how these challenges can be addressed using Machine Learning and modern backend tools.
+
+Machine Learning Approach
+Data
+
+Synthetic transaction data generated to simulate real payment behavior
+
+Includes customer activity, merchant behavior, device usage, location, and time
+
+Feature Engineering
+
+The model uses engineered features inspired by real fraud systems:
+
+Transaction velocity (last 5 minutes, 1 hour, 24 hours)
+
+Distance from previous transaction (Haversine distance)
+
+Device change detection
+
+Customer spending pattern comparison
+
+Merchant fraud history
+
+Time-based features (hour of day, day of week)
+
+These features help capture behavioral anomalies, not just transaction amount.
+
+Models Trained
+
+XGBoost (final production model)
+
+Random Forest
+
+Logistic Regression
+
+XGBoost is selected as the final model due to:
+
+Better performance on imbalanced data
+
+Strong recall for fraud cases
+
+Robust probability estimates
+
+Class imbalance is handled using scale_pos_weight.
+
+Model Evaluation Metrics
+
+Models are evaluated using:
+
+Precision
+
+Recall
+
+F1-Score
+
+ROC-AUC
+
+PR-AUC
+
+In addition, a cost-based evaluation is included to reflect real business impact:
+
+False Negatives (missed fraud) → high cost
+
+False Positives (incorrect blocks) → lower cost
+
+Project Structure
+fraud-detection/
+│
+├── fraud_detection.py        # Training + feature engineering + API
+├── requirements.txt          # Project dependencies
+├── fraud_xgb_model.joblib    # Trained XGBoost model
+├── scaler.joblib             # Feature scaler
+├── ohe.joblib                # One-hot encoder
+├── merchant_freq.joblib      # Merchant frequency mapping
+└── README.md
+
+Installation
+
+Clone the repository and install dependencies:
+
+git clone https://github.com/Mahith-data/fraud-detection.git
+cd fraud-detection
 pip install -r requirements.txt
-⚙️ Training the Model
 
-To generate a synthetic dataset and train all models:
+Model Training
+
+Training must be run once before starting the API:
 
 python fraud_detection.py --train
 
 
-This will:
+This step:
 
-Generate synthetic transaction data
+Generates synthetic data
 
-Perform preprocessing and feature engineering
+Trains all models
 
-Train XGBoost, RandomForest, and Logistic Regression models
+Saves trained artifacts for production use
 
-Save artifacts:
+Running the API
 
-fraud_xgb_model.joblib
-scaler.joblib
-ohe.joblib
-merchant_freq.joblib
-
-📊 Example Output
-[INFO] Synthetic dataset: 100000 rows, frauds=400
-[INFO] Train frauds=400, nonfrauds=99600, scale_pos_weight=249.00
-XGBoost metrics: {'precision': 0.72, 'recall': 0.68, 'f1': 0.70, 'roc_auc': 0.92, 'pr_auc': 0.51}
-RandomForest metrics: {'precision': 0.68, 'recall': 0.65, 'f1': 0.66, 'roc_auc': 0.89, 'pr_auc': 0.46}
-LogisticRegression metrics: {'precision': 0.61, 'recall': 0.60, 'f1': 0.60, 'roc_auc': 0.85, 'pr_auc': 0.41}
-
-🧮 Business Cost Example
-Confusion matrix: TN=19850, FP=50, FN=20, TP=80
-Total business cost: 20300 (cost_fn=1000, cost_fp=10)
-
-🌐 Running the API
-
-After training, start the FastAPI server:
+After training:
 
 uvicorn fraud_detection:app --reload
 
 
-API will be available at:
-👉 http://127.0.0.1:8000/docs
+The API will be available at:
 
-🧾 Example API Request
+http://127.0.0.1:8000
 
-POST /score
+API Testing (Swagger UI)
 
-Request:
+Open the browser and go to:
 
+http://127.0.0.1:8000/docs
+
+Sample Request
 {
-  "transaction_id": "T12345",
-  "transaction_amount": 250.0,
-  "transaction_time": "2025-10-07T12:34:56",
-  "customer_id": "C000001",
-  "merchant_id": "M00001",
-  "latitude": 28.6,
-  "longitude": 77.1,
+  "transaction_id": "T10001",
+  "transaction_amount": 15000,
+  "transaction_time": "2026-01-04T10:30:00",
+  "customer_id": "C000123",
+  "merchant_id": "M00045",
+  "latitude": 28.61,
+  "longitude": 77.23,
   "device_type": "android"
 }
 
-
-Response:
-
+Sample Response
 {
-  "transaction_id": "T12345",
-  "fraud_probability": 0.872345,
+  "transaction_id": "T10001",
+  "fraud_probability": 0.84,
   "decision": "FLAGGED"
 }
 
-🧩 Project Structure
-fraud_detection.py         # Main script (data gen + training + API)
-fraud_xgb_model.joblib     # Trained XGBoost model
-scaler.joblib              # Feature scaler
-ohe.joblib                 # One-hot encoder for device_type
-merchant_freq.joblib       # Merchant frequency map
-requirements.txt           # Dependencies
-README.md                  # Project documentation
+Technical Stack
 
-🧑‍💻 Author
+Python
 
-KARRI NAGA MAHITH KUMAR
-📧 k.mahith2006@gmail.com
+NumPy, Pandas
 
+Scikit-learn
+
+XGBoost
+
+FastAPI
+
+Uvicorn
+
+Joblib
+
+Real-World Relevance
+
+This project reflects how fraud detection systems are designed in real companies:
+
+Feature engineering based on user behavior
+
+Imbalance-aware model training
+
+Business cost considerations
+
+Real-time scoring via REST APIs
+
+Model artifact management for deployment
+
+Future Enhancements
+
+Integration with real transaction datasets
+
+Dockerization for production deployment
+
+CI/CD pipeline with automated testing
+
+Threshold tuning based on business risk
+
+Model monitoring and data drift detection
+
+Author
+
+Mahith K
+Computer Science (Data Science)
+Interested in Machine Learning, Data Engineering, and Applied AI
 
