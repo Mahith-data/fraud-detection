@@ -1,4 +1,4 @@
-# Fraud Detection System – End-to-End Machine Learning Project
+# Fraud Detection System 
 
 This project implements an end-to-end fraud detection system that mirrors how real-world financial fraud detection pipelines are built and deployed. It covers the complete Machine Learning lifecycle, from data generation and feature engineering to model training, evaluation, and real-time prediction using a REST API.
 
@@ -65,15 +65,18 @@ A cost-based evaluation is also included to reflect real business impact:
 fraud-detection/
 │
 ├── fraud_detection.py # Data generation, training, and API
-├── requirements.txt # Project dependencies
-├── fraud_xgb_model.joblib # Trained XGBoost model
-├── scaler.joblib # Feature scaler
-├── ohe.joblib # One-hot encoder
-├── merchant_freq.joblib # Merchant frequency mapping
-└── README.md
 
-yaml
-Copy code
+├── requirements.txt # Project dependencies
+
+├── fraud_xgb_model.joblib # Trained XGBoost model
+
+├── scaler.joblib # Feature scaler
+
+├── ohe.joblib # One-hot encoder
+
+├── merchant_freq.joblib # Merchant frequency mapping
+
+└── README.md
 
 
 
@@ -85,18 +88,17 @@ cd fraud-detection
 pip install -r requirements.txt
 Training the Model
 bash
-Copy code
+
 python fraud_detection.py --train
 This step generates data, trains the models, and saves all required artifacts for inference.
 
 Running the API
 bash
-Copy code
+
 uvicorn fraud_detection:app --reload
 API will be available at:
 
-cpp
-Copy code
+
 http://127.0.0.1:8000
 API Usage Example
 Endpoint: POST /score
@@ -104,7 +106,7 @@ Endpoint: POST /score
 Request:
 
 json
-Copy code
+
 {
   "transaction_id": "T10001",
   "transaction_amount": 15000,
@@ -118,7 +120,7 @@ Copy code
 Response:
 
 json
-Copy code
+
 {
   "transaction_id": "T10001",
   "fraud_probability": 0.84,
@@ -139,14 +141,6 @@ Uvicorn
 
 Joblib
 
-Key Takeaways
-Demonstrates complete ML workflow, not just model training
-
-Emphasizes feature engineering and business logic
-
-Designed with production deployment in mind
-
-Suitable for real-time fraud detection use cases
 
 Author
 Mahith K
