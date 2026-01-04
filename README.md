@@ -4,7 +4,7 @@ This project implements an end-to-end fraud detection system that mirrors how re
 
 The focus of this project is not just model accuracy, but practical ML engineering, business relevance, and deployability.
 
----
+
 
 ## Project Overview
 
@@ -15,7 +15,7 @@ Key objectives:
 - Capture behavioral anomalies instead of relying only on transaction amount
 - Deploy a trained model for real-time inference
 
----
+
 
 ## Machine Learning Pipeline
 
@@ -34,7 +34,7 @@ Features are designed based on real-world fraud detection practices:
 
 These features help detect unusual behavior patterns commonly associated with fraud.
 
----
+
 
 ## Models Used
 
@@ -44,7 +44,7 @@ These features help detect unusual behavior patterns commonly associated with fr
 
 XGBoost is selected as the final model due to its strong performance on imbalanced datasets and better recall for fraudulent transactions. Class imbalance is handled using appropriate weighting.
 
----
+
 
 ## Model Evaluation
 
@@ -59,7 +59,6 @@ A cost-based evaluation is also included to reflect real business impact:
 - False negatives (missed fraud) have a high cost
 - False positives (incorrectly flagged transactions) have a lower cost
 
----
 
 ## Project Structure
 
@@ -76,7 +75,7 @@ fraud-detection/
 yaml
 Copy code
 
----
+
 
 ## Installation
 
